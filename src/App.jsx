@@ -1212,7 +1212,7 @@ const fetchSensorData = async (
         endDate,
         nodeValue,
       });
-      console.log("response", response);
+      // console.log("response", response);
 
       if (response.status === 304) {
         console.log("Data not modified since last request.");
