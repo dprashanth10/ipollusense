@@ -984,6 +984,15 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import dayjs from "dayjs";
+import { initializeApp } from "firebase/app";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+} from "firebase/firestore";
 
 // Component
 const GraphWithFeatureSelection = ({ data }) => {
@@ -1006,6 +1015,22 @@ const GraphWithFeatureSelection = ({ data }) => {
     []
   );
 
+  /** ──────── 📦 Firebase Configuration ──────── */
+  const firebaseConfig = {
+    apiKey: "AIzaSyCSDU3MoCUfcC3Jfn_T-cZ6fqcp2ZUFFMk",
+    authDomain: "ipollusense-52f67.firebaseapp.com",
+    projectId: "ipollusense-52f67",
+    storageBucket: "ipollusense-52f67.appspot.com",
+    messagingSenderId: "733434038670",
+    appId: "1:733434038670:web:7e3d9475fd6310d1afbcdf",
+    measurementId: "G-VHSG19J7HN",
+  };
+
+  /** ──────── 📦 Firebase Initialization ──────── */
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
   /** ──────── 🧠 States ──────── */
   const [selectedFeatures, setSelectedFeatures] = useState(["pm2_5", "pm10"]);
   const [originalData, setOriginalData] = useState([]);
@@ -1015,10 +1040,180 @@ const GraphWithFeatureSelection = ({ data }) => {
   const defaultOriginalData = useRef([]);
 
   /** ──────── 🎣 Effects ──────── */
+  // useEffect(() => {
+  //   if (!timeRange) {
+  //     defaultOriginalData.current = data;
+  //     setOriginalData(data);
+  //   }
+  // }, [data, timeRange]);
+
   useEffect(() => {
+    const fetchFirebaseData = async () => {
+      try {
+        const checkpointsQuery = query(
+          collection(db, "devices"),
+          orderBy("timestamp", "desc")
+          // where("timestamp", ">=", startDate),
+          // where("timestamp", "<=", endDate)
+        );
+        let querySnapshot = await getDocs(checkpointsQuery);
+        querySnapshot = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        querySnapshot = [
+          {
+            id: "qWoyUCUsooz5J43PJvNW",
+            name: "Prajnadipta123",
+            timestamp: "2025-04-11T18:00:55.885Z", // Replaced with createdAt
+            activities: ["1", "2025-04-11T18:00:55.885Z", "Dhool", "Party"],
+            conditions: ["Window", "Chimney", "Cave"],
+            device_ids: ["1", "2", "3", "4"],
+            factors: [{ value: "100", key: "aqi" }],
+          },
+          {
+            id: "MNJIR1vzRTe41dnMNiKP",
+            name: "Sujoy saha",
+            timestamp: "2025-04-11T17:59:59.902Z", // Replaced with createdAt
+            activities: ["2", "2025-04-11T17:59:59.902Z", "Dance"],
+            conditions: ["Rain", "Humidity"],
+            device_ids: ["5", "6"],
+            factors: [{ value: "75", key: "humidity" }],
+          },
+          {
+            id: "juLCIXoynSIsim4xauk0",
+            name: "Arko",
+            timestamp: "2025-04-11T17:59:28.653Z", // Replaced with createdAt
+            activities: ["3", "2025-04-11T17:59:28.653Z", "Dhool", "Party"],
+            conditions: ["Dust", "Noise"],
+            device_ids: ["7", "8", "9"],
+            factors: [{ value: "60", key: "noise" }],
+          },
+          {
+            id: "yvwpepeolLov7gStXvGj",
+            name: "Sujoy saha",
+            timestamp: "2025-04-11T17:59:19.362Z", // Replaced with createdAt
+            activities: ["4", "2025-04-11T17:59:19.362Z", "Meeting"],
+            conditions: ["Pressure", "Temperature"],
+            device_ids: ["10", "11"],
+            factors: [{ value: "101", key: "pressure" }],
+          },
+          {
+            id: "pOlF28UU789zuL13x2Xv",
+            name: "Arko",
+            timestamp: "2025-04-11T17:58:32.491Z", // Replaced with createdAt
+            activities: ["5", "2025-04-11T17:58:32.491Z", "Dhool"],
+            conditions: ["Humidity", "Temperature"],
+            device_ids: ["12", "13"],
+            factors: [{ value: "23", key: "temperature" }],
+          },
+          {
+            id: "8qRJO0U24njpKuxCP5Ml",
+            name: "vr",
+            timestamp: "2025-04-11T17:57:47.747Z", // Replaced with createdAt
+            activities: [
+              "6",
+              "2025-04-11T17:57:47.747Z",
+              "Dance",
+              "Discussion",
+            ],
+            conditions: ["Noise", "Vibration"],
+            device_ids: ["14", "15"],
+            factors: [{ value: "50", key: "vibration" }],
+          },
+          {
+            id: "US47g2cfwgy2jIQHw9QL",
+            name: "VEERENDRA R PATIL",
+            timestamp: "2025-04-11T17:57:19.524Z", // Replaced with createdAt
+            activities: ["7", "2025-04-11T17:57:19.524Z", "Research", "Party"],
+            conditions: ["Temperature", "Pressure"],
+            device_ids: ["16", "17"],
+            factors: [{ value: "20", key: "temperature" }],
+          },
+          {
+            id: "hdo85oRmo0thTlmTrMxK",
+            name: "John",
+            timestamp: "2025-04-11T17:57:09.759Z", // Replaced with createdAt
+            activities: [
+              "8",
+              "2025-04-11T17:57:09.759Z",
+              "Discussion",
+              "Training",
+            ],
+            conditions: ["Pressure", "Humidity"],
+            device_ids: ["18", "19"],
+            factors: [{ value: "102", key: "pressure" }],
+          },
+          {
+            id: "g3rc4A5yh8DjFs9DkYnB",
+            name: "Veerendra",
+            timestamp: "2025-04-11T17:56:58.637Z", // Replaced with createdAt
+            activities: ["9", "2025-04-11T17:56:58.637Z", "Lecture"],
+            conditions: ["Wind", "Dust"],
+            device_ids: ["20", "21"],
+            factors: [{ value: "15", key: "wind" }],
+          },
+          {
+            id: "IpL4xDzqOOiKQnQCLfbG",
+            name: "Ankur",
+            timestamp: "2025-04-11T17:56:48.216Z", // Replaced with createdAt
+            activities: ["10", "2025-04-11T17:56:48.216Z", "Party"],
+            conditions: ["Heat"],
+            device_ids: ["22", "23"],
+            factors: [{ value: "30", key: "temperature" }],
+          },
+        ];
+
+        console.log("querySnapshots Query:", querySnapshot);
+
+        // Step 2: Inject activities into the API data
+        const enhancedData = data.map((point, index) => {
+          let activities = [];
+
+          // Exact match
+          const exactMatch = querySnapshot.find(
+            (fb) => fb.timestamp === point.createdAt
+          );
+          if (exactMatch) {
+            activities = exactMatch.activities || [];
+          } else {
+            // Try in-between match
+            const prev = data[index - 1];
+            const next = data[index + 1];
+
+            const betweenMatch = querySnapshot.find((fb) => {
+              const fbTime = new Date(fb.timestamp).getTime();
+              const prevTime = prev ? new Date(prev.createdAt).getTime() : null;
+              const nextTime = next ? new Date(next.createdAt).getTime() : null;
+
+              return (
+                prevTime !== null &&
+                nextTime !== null &&
+                fbTime > prevTime &&
+                fbTime < nextTime
+              );
+            });
+
+            if (betweenMatch) {
+              activities = betweenMatch.activities || [];
+            }
+          }
+
+          // Add activities to the point
+          return { ...point, activities };
+        });
+        console.log("Enhanced Data:", enhancedData);
+        setOriginalData(enhancedData);
+      } catch (error) {
+        console.error("Error fetching firebase data:", error);
+      }
+    };
+
     if (!timeRange) {
-      defaultOriginalData.current = data;
-      setOriginalData(data);
+      fetchFirebaseData();
+      // defaultOriginalData.current = data;
+      // setOriginalData(data);
     }
   }, [data, timeRange]);
 
@@ -1084,6 +1279,27 @@ const GraphWithFeatureSelection = ({ data }) => {
     }
   };
 
+  // const fetchFirebaseData = async () => {
+  //   try {
+  //     const checkpointsQuery = query(
+  //       collection(db, "devices"),
+  //       orderBy("timestamp", "desc")
+  //       // where("timestamp", ">=", startDate),
+  //       // where("timestamp", "<=", endDate)
+  //     );
+  //     let querySnapshot = await getDocs(checkpointsQuery);
+  //     querySnapshot = querySnapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     }));
+  //     console.log("querySnapshots Query:", querySnapshot);
+  //   } catch (error) {
+  //     console.error("Error fetching firebase data:", error);
+  //   }
+  // };
+
+  // fetchFirebaseData();
+
   const generateCustomTicks = (data, selectedRange) => {
     let interval;
     if (selectedRange === "1h") interval = 10;
@@ -1108,6 +1324,110 @@ const GraphWithFeatureSelection = ({ data }) => {
     },
     [originalData]
   );
+
+  // const formatTooltipValue = useCallback(
+  //   (value) =>
+  //     value !== null && value !== undefined ? value.toFixed(2) : "N/A",
+  //   []
+  // );
+
+  // const CustomTooltip = ({ active, payload, label }) => {
+  //   if (!active || !payload || payload.length === 0) return null;
+
+  //   const dataPoint = payload[0].payload;
+  //   const activities = dataPoint.activities?.slice(2); // skip ID + timestamp
+
+  //   return (
+  //     <Box
+  //       sx={{
+  //         backgroundColor: "#00796b",
+  //         padding: 2,
+  //         borderRadius: 2,
+  //         color: "#fff",
+  //         fontSize: 13,
+  //         maxWidth: 250,
+  //       }}
+  //     >
+  //       <div>
+  //         <strong>Time:</strong>{" "}
+  //         {dayjs(dataPoint.timestamp).format("YYYY-MM-DD HH:mm:ss")}
+  //       </div>
+  //       {payload.map((entry) => (
+  //         <div key={entry.dataKey}>
+  //           <strong>{entry.name}:</strong> {entry.value?.toFixed(2)}
+  //         </div>
+  //       ))}
+  //       {activities && activities.length > 0 && (
+  //         <Box mt={1}>
+  //           <strong>Activities:</strong> {activities.join(", ")}
+  //         </Box>
+  //       )}
+  //     </Box>
+  //   );
+  // };
+
+  const CustomTooltip = ({ active, payload, label, originalData }) => {
+    if (!active || !payload || payload.length === 0) return null;
+
+    const scaledDataPoint = payload[0].payload;
+    const createdAt = scaledDataPoint.createdAt;
+
+    const originalPoint = originalData.find((d) => d.createdAt === createdAt);
+    const activities = originalPoint?.activities?.slice(2); // Skip ID + timestamp
+
+    return (
+      <Box
+        sx={{
+          backgroundColor: "#00796b",
+          padding: 2,
+          borderRadius: 2,
+          color: "#fff",
+          fontSize: 13,
+          maxWidth: 250,
+        }}
+      >
+        <div>
+          <strong>Time:</strong>{" "}
+          {dayjs(originalPoint?.timestamp || label).format(
+            "YYYY-MM-DD HH:mm:ss"
+          )}
+        </div>
+        {payload.map((entry) => {
+          const actualVal = originalPoint?.[entry.dataKey];
+          return (
+            <div key={entry.dataKey}>
+              <strong>{entry.name}:</strong>{" "}
+              {actualVal !== null && actualVal !== undefined
+                ? actualVal.toFixed(2)
+                : "N/A"}
+            </div>
+          );
+        })}
+        {activities && activities.length > 0 && (
+          <Box mt={1}>
+            <strong>Activities:</strong> {activities.join(", ")}
+          </Box>
+        )}
+      </Box>
+    );
+  };
+
+  const ActivityDot = (props) => {
+    const { cx, cy, payload } = props;
+
+    // Check if this point has activities
+    const hasActivities = payload.activities && payload.activities.length > 2;
+
+    if (!hasActivities) return null;
+
+    return (
+      // <svg x={cx - 6} y={cy - 6} width={12} height={12} viewBox="0 0 24 24">
+      <text x={cx} y={cy - 10} textAnchor="middle" fontSize="16" fill="red">
+        🚩
+      </text>
+      // {/* </svg> */}
+    );
+  };
 
   /** ──────── 📊 Data Processing ──────── */
   const scaledData = useMemo(() => {
@@ -1289,6 +1609,9 @@ const GraphWithFeatureSelection = ({ data }) => {
                 formatter={formatTooltipValue}
                 contentStyle={{ backgroundColor: "#00796b", borderRadius: 5 }}
                 itemStyle={{ fontWeight: "bold", color: "#fff" }}
+                content={(props) => (
+                  <CustomTooltip {...props} originalData={originalData} />
+                )}
               />
               <Legend
                 wrapperStyle={{
@@ -1307,7 +1630,8 @@ const GraphWithFeatureSelection = ({ data }) => {
                     type="monotone"
                     stroke={`url(#${feature.key})`}
                     strokeWidth={3}
-                    dot={{ r: 4 }}
+                    // dot={{ r: 4 }}
+                    dot={<ActivityDot />} // 🟡 custom activity-aware dot
                     activeDot={{ r: 6 }}
                     name={feature.label}
                   />
