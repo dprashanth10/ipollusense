@@ -1040,10 +1040,184 @@ const GraphWithFeatureSelection = ({ data }) => {
   const defaultOriginalData = useRef([]);
 
   /** ──────── 🎣 Effects ──────── */
+  useEffect(() => {
+    if (!timeRange) {
+      defaultOriginalData.current = data;
+      setOriginalData(data);
+    }
+  }, [data, timeRange]);
+
   // useEffect(() => {
+  //   const fetchFirebaseData = async () => {
+  //     try {
+  //       const checkpointsQuery = query(
+  //         collection(db, "devices"),
+  //         orderBy("timestamp", "desc")
+  //         // where("timestamp", ">=", startDate),
+  //         // where("timestamp", "<=", endDate)
+  //       );
+  //       let querySnapshot = await getDocs(checkpointsQuery);
+  //       querySnapshot = querySnapshot.docs.map((doc) => ({
+  //         id: doc.id,
+  //         ...doc.data(),
+  //       }));
+
+  //       querySnapshot = [
+  //         {
+  //           id: "qWoyUCUsooz5J43PJvNW",
+  //           name: "Prajnadipta123",
+  //           timestamp: "2025-04-11T18:00:55.885Z", // Replaced with createdAt
+  //           activities: ["1", "2025-04-11T18:00:55.885Z", "Dhool", "Party"],
+  //           conditions: ["Window", "Chimney", "Cave"],
+  //           device_ids: ["1", "2", "3", "4"],
+  //           factors: [{ value: "100", key: "aqi" }],
+  //         },
+  //         {
+  //           id: "MNJIR1vzRTe41dnMNiKP",
+  //           name: "Sujoy saha",
+  //           timestamp: "2025-04-11T17:59:59.902Z", // Replaced with createdAt
+  //           activities: ["2", "2025-04-11T17:59:59.902Z", "Dance"],
+  //           conditions: ["Rain", "Humidity"],
+  //           device_ids: ["5", "6"],
+  //           factors: [{ value: "75", key: "humidity" }],
+  //         },
+  //         {
+  //           id: "juLCIXoynSIsim4xauk0",
+  //           name: "Arko",
+  //           timestamp: "2025-04-11T17:59:28.653Z", // Replaced with createdAt
+  //           activities: ["3", "2025-04-11T17:59:28.653Z", "Dhool", "Party"],
+  //           conditions: ["Dust", "Noise"],
+  //           device_ids: ["7", "8", "9"],
+  //           factors: [{ value: "60", key: "noise" }],
+  //         },
+  //         {
+  //           id: "yvwpepeolLov7gStXvGj",
+  //           name: "Sujoy saha",
+  //           timestamp: "2025-04-11T17:59:19.362Z", // Replaced with createdAt
+  //           activities: ["4", "2025-04-11T17:59:19.362Z", "Meeting"],
+  //           conditions: ["Pressure", "Temperature"],
+  //           device_ids: ["10", "11"],
+  //           factors: [{ value: "101", key: "pressure" }],
+  //         },
+  //         {
+  //           id: "pOlF28UU789zuL13x2Xv",
+  //           name: "Arko",
+  //           timestamp: "2025-04-11T17:58:32.491Z", // Replaced with createdAt
+  //           activities: ["5", "2025-04-11T17:58:32.491Z", "Dhool"],
+  //           conditions: ["Humidity", "Temperature"],
+  //           device_ids: ["12", "13"],
+  //           factors: [{ value: "23", key: "temperature" }],
+  //         },
+  //         {
+  //           id: "8qRJO0U24njpKuxCP5Ml",
+  //           name: "vr",
+  //           timestamp: "2025-04-11T17:57:47.747Z", // Replaced with createdAt
+  //           activities: [
+  //             "6",
+  //             "2025-04-11T17:57:47.747Z",
+  //             "Dance",
+  //             "Discussion",
+  //           ],
+  //           conditions: ["Noise", "Vibration"],
+  //           device_ids: ["14", "15"],
+  //           factors: [{ value: "50", key: "vibration" }],
+  //         },
+  //         {
+  //           id: "US47g2cfwgy2jIQHw9QL",
+  //           name: "VEERENDRA R PATIL",
+  //           timestamp: "2025-04-11T17:57:19.524Z", // Replaced with createdAt
+  //           activities: ["7", "2025-04-11T17:57:19.524Z", "Research", "Party"],
+  //           conditions: ["Temperature", "Pressure"],
+  //           device_ids: ["16", "17"],
+  //           factors: [{ value: "20", key: "temperature" }],
+  //         },
+  //         {
+  //           id: "hdo85oRmo0thTlmTrMxK",
+  //           name: "John",
+  //           timestamp: "2025-04-11T17:57:09.759Z", // Replaced with createdAt
+  //           activities: [
+  //             "8",
+  //             "2025-04-11T17:57:09.759Z",
+  //             "Discussion",
+  //             "Training",
+  //           ],
+  //           conditions: ["Pressure", "Humidity"],
+  //           device_ids: ["18", "19"],
+  //           factors: [{ value: "102", key: "pressure" }],
+  //         },
+  //         {
+  //           id: "g3rc4A5yh8DjFs9DkYnB",
+  //           name: "Veerendra",
+  //           timestamp: "2025-04-11T17:56:58.637Z", // Replaced with createdAt
+  //           activities: ["9", "2025-04-11T17:56:58.637Z", "Lecture"],
+  //           conditions: ["Wind", "Dust"],
+  //           device_ids: ["20", "21"],
+  //           factors: [{ value: "15", key: "wind" }],
+  //         },
+  //         {
+  //           id: "IpL4xDzqOOiKQnQCLfbG",
+  //           name: "Ankur",
+  //           timestamp: "2025-04-11T17:56:48.216Z", // Replaced with createdAt
+  //           activities: ["10", "2025-04-11T17:56:48.216Z", "Party"],
+  //           conditions: ["Heat"],
+  //           device_ids: ["22", "23"],
+  //           factors: [{ value: "30", key: "temperature" }],
+  //         },
+  //       ];
+
+  //       console.log("querySnapshots Query:", querySnapshot);
+
+  //       // Step 2: Inject activities into the API data
+  //       const enhancedData = data.map((point, index) => {
+  //         let activities = [];
+
+  //         // Exact match
+  //         const exactMatch = querySnapshot.find(
+  //           (fb) => fb.timestamp === point.createdAt
+  //         );
+  //         if (exactMatch) {
+  //           console.log("entered 1");
+
+  //           activities = exactMatch.activities || [];
+  //         } else {
+  //           console.log("entered 2");
+
+  //           // Try in-between match
+  //           const prev = data[index - 1];
+  //           const next = data[index + 1];
+
+  //           const betweenMatch = querySnapshot.find((fb) => {
+  //             const fbTime = new Date(fb.timestamp).getTime();
+  //             const prevTime = prev ? new Date(prev.createdAt).getTime() : null;
+  //             const nextTime = next ? new Date(next.createdAt).getTime() : null;
+
+  //             return (
+  //               prevTime !== null &&
+  //               nextTime !== null &&
+  //               fbTime > prevTime &&
+  //               fbTime < nextTime
+  //             );
+  //           });
+
+  //           if (betweenMatch) {
+  //             activities = betweenMatch.activities || [];
+  //           }
+  //         }
+
+  //         // Add activities to the point
+  //         return { ...point, activities };
+  //       });
+  //       console.log("Enhanced Data:", enhancedData);
+  //       setOriginalData(enhancedData);
+  //     } catch (error) {
+  //       console.error("Error fetching firebase data:", error);
+  //     }
+  //   };
+
   //   if (!timeRange) {
-  //     defaultOriginalData.current = data;
-  //     setOriginalData(data);
+  //     fetchFirebaseData();
+  //     // defaultOriginalData.current = data;
+  //     // setOriginalData(data);
   //   }
   // }, [data, timeRange]);
 
@@ -1053,8 +1227,6 @@ const GraphWithFeatureSelection = ({ data }) => {
         const checkpointsQuery = query(
           collection(db, "devices"),
           orderBy("timestamp", "desc")
-          // where("timestamp", ">=", startDate),
-          // where("timestamp", "<=", endDate)
         );
         let querySnapshot = await getDocs(checkpointsQuery);
         querySnapshot = querySnapshot.docs.map((doc) => ({
@@ -1062,6 +1234,7 @@ const GraphWithFeatureSelection = ({ data }) => {
           ...doc.data(),
         }));
 
+        // Mock Firebase Data (for local testing)
         querySnapshot = [
           {
             id: "qWoyUCUsooz5J43PJvNW",
@@ -1165,44 +1338,114 @@ const GraphWithFeatureSelection = ({ data }) => {
           },
         ];
 
+        // querySnapshot = [
+        //   {
+        //     id: "qWoyUCUsooz5J43PJvNW",
+        //     name: "Prajnadipta123",
+        //     timestamp: "2025-04-11T18:00:45.885Z", // 10s before original
+        //     activities: ["1", "2025-04-11T18:00:45.885Z", "Dhool", "Party"],
+        //   },
+        //   {
+        //     id: "MNJIR1vzRTe41dnMNiKP",
+        //     name: "Sujoy saha",
+        //     timestamp: "2025-04-11T17:59:49.902Z", // 10s before
+        //     activities: ["2", "2025-04-11T17:59:49.902Z", "Dance"],
+        //   },
+        //   {
+        //     id: "juLCIXoynSIsim4xauk0",
+        //     name: "Arko",
+        //     timestamp: "2025-04-11T17:59:38.653Z", // 10s after
+        //     activities: ["3", "2025-04-11T17:59:38.653Z", "Dhool", "Party"],
+        //   },
+        //   {
+        //     id: "yvwpepeolLov7gStXvGj",
+        //     name: "Sujoy saha",
+        //     timestamp: "2025-04-11T17:59:29.362Z", // 10s after
+        //     activities: ["4", "2025-04-11T17:59:29.362Z", "Meeting"],
+        //   },
+        //   {
+        //     id: "pOlF28UU789zuL13x2Xv",
+        //     name: "Arko",
+        //     timestamp: "2025-04-11T17:58:42.491Z", // 10s after
+        //     activities: ["5", "2025-04-11T17:58:42.491Z", "Dhool"],
+        //   },
+        //   {
+        //     id: "8qRJO0U24njpKuxCP5Ml",
+        //     name: "vr",
+        //     timestamp: "2025-04-11T17:57:57.747Z", // 10s after
+        //     activities: [
+        //       "6",
+        //       "2025-04-11T17:57:57.747Z",
+        //       "Dance",
+        //       "Discussion",
+        //     ],
+        //   },
+        //   {
+        //     id: "US47g2cfwgy2jIQHw9QL",
+        //     name: "VEERENDRA R PATIL",
+        //     timestamp: "2025-04-11T17:57:29.524Z", // 10s after
+        //     activities: ["7", "2025-04-11T17:57:29.524Z", "Research", "Party"],
+        //   },
+        //   {
+        //     id: "hdo85oRmo0thTlmTrMxK",
+        //     name: "John",
+        //     timestamp: "2025-04-11T17:56:59.759Z", // 10s after
+        //     activities: [
+        //       "8",
+        //       "2025-04-11T17:56:59.759Z",
+        //       "Discussion",
+        //       "Training",
+        //     ],
+        //   },
+        //   {
+        //     id: "g3rc4A5yh8DjFs9DkYnB",
+        //     name: "Veerendra",
+        //     timestamp: "2025-04-11T17:56:48.637Z", // 10s before
+        //     activities: ["9", "2025-04-11T17:56:48.637Z", "Lecture"],
+        //   },
+        //   {
+        //     id: "IpL4xDzqOOiKQnQCLfbG",
+        //     name: "Ankur",
+        //     timestamp: "2025-04-11T17:56:38.216Z", // 10s before
+        //     activities: ["10", "2025-04-11T17:56:38.216Z", "Party"],
+        //   },
+        // ];
+
         console.log("querySnapshots Query:", querySnapshot);
 
-        // Step 2: Inject activities into the API data
         const enhancedData = data.map((point, index) => {
           let activities = [];
 
-          // Exact match
+          // Step 1: Exact match
           const exactMatch = querySnapshot.find(
             (fb) => fb.timestamp === point.createdAt
           );
+
           if (exactMatch) {
             activities = exactMatch.activities || [];
           } else {
-            // Try in-between match
-            const prev = data[index - 1];
-            const next = data[index + 1];
+            // Step 2: Nearest Neighbor within ±1 minute (60000 ms)
+            let nearest = null;
+            let smallestDiff = Infinity;
 
-            const betweenMatch = querySnapshot.find((fb) => {
-              const fbTime = new Date(fb.timestamp).getTime();
-              const prevTime = prev ? new Date(prev.createdAt).getTime() : null;
-              const nextTime = next ? new Date(next.createdAt).getTime() : null;
+            querySnapshot.forEach((fb) => {
+              const fbTime = fb.timestamp;
+              const timeDiff = Math.abs(fbTime - point.createdAt);
 
-              return (
-                prevTime !== null &&
-                nextTime !== null &&
-                fbTime > prevTime &&
-                fbTime < nextTime
-              );
+              if (timeDiff <= 60000 && timeDiff < smallestDiff) {
+                smallestDiff = timeDiff;
+                nearest = fb;
+              }
             });
 
-            if (betweenMatch) {
-              activities = betweenMatch.activities || [];
+            if (nearest) {
+              activities = nearest.activities || [];
             }
           }
 
-          // Add activities to the point
           return { ...point, activities };
         });
+
         console.log("Enhanced Data:", enhancedData);
         setOriginalData(enhancedData);
       } catch (error) {
@@ -1212,8 +1455,6 @@ const GraphWithFeatureSelection = ({ data }) => {
 
     if (!timeRange) {
       fetchFirebaseData();
-      // defaultOriginalData.current = data;
-      // setOriginalData(data);
     }
   }, [data, timeRange]);
 
@@ -1422,7 +1663,7 @@ const GraphWithFeatureSelection = ({ data }) => {
 
     return (
       // <svg x={cx - 6} y={cy - 6} width={12} height={12} viewBox="0 0 24 24">
-      <text x={cx} y={cy - 10} textAnchor="middle" fontSize="16" fill="red">
+      <text x={cx + 5} y={cy - 5} textAnchor="middle" fontSize="16" fill="red">
         🚩
       </text>
       // {/* </svg> */}
