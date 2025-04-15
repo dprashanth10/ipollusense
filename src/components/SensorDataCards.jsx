@@ -590,6 +590,198 @@
 
 // export default SensorDataCards;
 
+// import React, { useMemo } from "react";
+// import {
+//   Typography,
+//   Box,
+//   Grid,
+//   Card,
+//   CardContent,
+//   Divider,
+//   Button,
+// } from "@mui/material";
+
+// const SensorDataCards = ({
+//   data,
+//   currentPage,
+//   totalPages,
+//   onPageChange,
+//   isDefaultView,
+// }) => {
+//   const formattedData = useMemo(() => {
+//     return data.map((item, index) => ({
+//       ...item,
+//       index: index + 1,
+//       timestamp: new Date(item.activityData.timestamp).toLocaleString(),
+//       calculatedAQI: Math.max(
+//         item?.activityData?.calculated?.aqi_co || 0,
+//         item?.activityData?.calculated?.aqi_dust || 0,
+//         item?.activityData?.calculated?.aqi_co2 || 0,
+//         item?.activityData?.calculated?.aqi_voc || 0
+//       ),
+//       predictedAQI: Math.max(
+//         item?.activityData?.predicted?.aqi_co || 0,
+//         item?.activityData?.predicted?.aqi_dust || 0
+//       ),
+//     }));
+//   }, [data]);
+
+//   const handlePrevPage = () => {
+//     if (currentPage > 1) onPageChange(null, currentPage - 1);
+//   };
+
+//   const handleNextPage = () => {
+//     if (currentPage < totalPages) onPageChange(null, currentPage + 1);
+//   };
+
+//   return (
+//     <Box
+//       sx={{
+//         backgroundColor: "#ffffff",
+//         borderRadius: 4,
+//         p: 3,
+//         maxHeight: 500,
+//         overflowY: "auto",
+//         boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+//         "&::-webkit-scrollbar": {
+//           width: "8px",
+//         },
+//         "&::-webkit-scrollbar-thumb": {
+//           backgroundColor: "#cbd5e0",
+//           borderRadius: "4px",
+//         },
+//       }}
+//     >
+//       <Typography
+//         variant="h6"
+//         sx={{
+//           mb: 3,
+//           color: "#1e293b",
+//           fontWeight: 600,
+//           textAlign: "center",
+//           fontSize: "1.25rem",
+//         }}
+//       >
+//         Sensor Data
+//       </Typography>
+
+//       <Grid container spacing={2}>
+//         {formattedData.map((item) => (
+//           <Grid item xs={12} sm={6} md={12} key={item.index}>
+//             <Card
+//               sx={{
+//                 borderRadius: 4,
+//                 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+//                 border: "1px solid #e2e8f0",
+//               }}
+//             >
+//               <CardContent>
+//                 <Box
+//                   sx={{
+//                     display: "flex",
+//                     alignItems: "center",
+//                     justifyContent: "space-between",
+//                     mb: 2,
+//                   }}
+//                 >
+//                   <Typography
+//                     variant="body2"
+//                     sx={{
+//                       backgroundColor: "#3b82f6",
+//                       color: "white",
+//                       px: 2,
+//                       py: 0.5,
+//                       borderRadius: "9999px",
+//                       fontWeight: 600,
+//                     }}
+//                   >
+//                     {item.index}
+//                   </Typography>
+//                   <Typography
+//                     variant="caption"
+//                     sx={{ color: "#64748b", fontStyle: "italic" }}
+//                   >
+//                     {item.timestamp}
+//                   </Typography>
+//                 </Box>
+
+//                 <Grid container spacing={2}>
+//                   <Grid item xs={6}>
+//                     <Typography variant="body2" sx={{ color: "#0f172a" }}>
+//                       <strong>Temp:</strong>{" "}
+//                       {item?.activityData?.data?.temperature || 0} °C
+//                     </Typography>
+//                     <Typography variant="body2" sx={{ color: "#0f172a" }}>
+//                       <strong>Humidity:</strong>{" "}
+//                       {item?.activityData?.data?.humidity || 0} %
+//                     </Typography>
+//                   </Grid>
+//                   <Grid item xs={6}>
+//                     <Typography variant="body2" sx={{ color: "#0f172a" }}>
+//                       <strong>PM2.5:</strong>{" "}
+//                       {item?.activityData?.data?.pm2_5 || 0} µg/m³
+//                     </Typography>
+//                     <Typography variant="body2" sx={{ color: "#0f172a" }}>
+//                       <strong>PM10:</strong>{" "}
+//                       {item?.activityData?.data?.pm10 || 0} µg/m³
+//                     </Typography>
+//                   </Grid>
+//                 </Grid>
+
+//                 <Divider sx={{ my: 2 }} />
+
+//                 <Grid container spacing={2}>
+//                   <Grid item xs={6}>
+//                     <Typography
+//                       variant="body2"
+//                       sx={{ color: "#dc2626", fontWeight: 600 }}
+//                     >
+//                       AQI (Calculated)
+//                     </Typography>
+//                     <Typography variant="body2">
+//                       {item.calculatedAQI}
+//                     </Typography>
+//                   </Grid>
+//                   <Grid item xs={6}>
+//                     <Typography
+//                       variant="body2"
+//                       sx={{ color: "#0f172a", fontWeight: 600 }}
+//                     >
+//                       AQI (Predicted)
+//                     </Typography>
+//                     <Typography variant="body2">{item.predictedAQI}</Typography>
+//                   </Grid>
+//                 </Grid>
+//               </CardContent>
+//             </Card>
+//           </Grid>
+//         ))}
+//       </Grid>
+
+//       <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+//         <Button
+//           variant="contained"
+//           onClick={handlePrevPage}
+//           disabled={currentPage === 1}
+//           sx={{ borderRadius: 2, mr: 2, textTransform: "none" }}
+//         >
+//           Prev
+//         </Button>
+//         <Button
+//           variant="contained"
+//           onClick={handleNextPage}
+//           disabled={currentPage === totalPages}
+//           sx={{ borderRadius: 2, textTransform: "none" }}
+//         >
+//           Next
+//         </Button>
+//       </Box>
+//     </Box>
+//   );
+// };
+
+// export default SensorDataCards;
+
 import React, { useMemo } from "react";
 import {
   Typography,
@@ -601,6 +793,8 @@ import {
   Button,
 } from "@mui/material";
 
+// ────── SensorDataCards Component ─────────────────────────────────────────────
+
 const SensorDataCards = ({
   data,
   currentPage,
@@ -608,6 +802,8 @@ const SensorDataCards = ({
   onPageChange,
   isDefaultView,
 }) => {
+  // ────── Format incoming data with computed values ─────────────────────────────────────────────
+
   const formattedData = useMemo(() => {
     return data.map((item, index) => ({
       ...item,
@@ -626,6 +822,8 @@ const SensorDataCards = ({
     }));
   }, [data]);
 
+  // ───────── Pagination Handlers ─────────────────────────────────────────────
+
   const handlePrevPage = () => {
     if (currentPage > 1) onPageChange(null, currentPage - 1);
   };
@@ -633,6 +831,8 @@ const SensorDataCards = ({
   const handleNextPage = () => {
     if (currentPage < totalPages) onPageChange(null, currentPage + 1);
   };
+
+  // ───────── Main Render ─────────────────────────────────────────────
 
   return (
     <Box
@@ -652,6 +852,7 @@ const SensorDataCards = ({
         },
       }}
     >
+      {/* ===== Section Header ===== */}
       <Typography
         variant="h6"
         sx={{
@@ -665,6 +866,7 @@ const SensorDataCards = ({
         Sensor Data
       </Typography>
 
+      {/* ===== Data Cards ===== */}
       <Grid container spacing={2}>
         {formattedData.map((item) => (
           <Grid item xs={12} sm={6} md={12} key={item.index}>
@@ -676,6 +878,7 @@ const SensorDataCards = ({
               }}
             >
               <CardContent>
+                {/* ---- Card Header: Index + Timestamp ---- */}
                 <Box
                   sx={{
                     display: "flex",
@@ -695,7 +898,7 @@ const SensorDataCards = ({
                       fontWeight: 600,
                     }}
                   >
-                    {item.index}
+                    #{item.index}
                   </Typography>
                   <Typography
                     variant="caption"
@@ -705,6 +908,7 @@ const SensorDataCards = ({
                   </Typography>
                 </Box>
 
+                {/* ---- Sensor Readings: Temperature, Humidity, PMs ---- */}
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <Typography variant="body2" sx={{ color: "#0f172a" }}>
@@ -730,6 +934,7 @@ const SensorDataCards = ({
 
                 <Divider sx={{ my: 2 }} />
 
+                {/* ---- AQI Details ---- */}
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <Typography
@@ -758,6 +963,7 @@ const SensorDataCards = ({
         ))}
       </Grid>
 
+      {/* ===== Pagination Controls ===== */}
       <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
         <Button
           variant="contained"
