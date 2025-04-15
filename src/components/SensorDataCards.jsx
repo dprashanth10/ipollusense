@@ -837,7 +837,7 @@ const SensorDataCards = ({
   return (
     <Box
       sx={{
-        backgroundColor: "#ffffff",
+        backgroundColor: "aliceblue",
         borderRadius: 4,
         p: 3,
         maxHeight: 500,

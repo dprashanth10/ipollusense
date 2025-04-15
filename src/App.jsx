@@ -1667,6 +1667,361 @@
 
 // export default App;
 
+// import React, { useState } from "react";
+// import {
+//   AppBar,
+//   Toolbar,
+//   Typography,
+//   Box,
+//   TextField,
+//   Button,
+//   Grid,
+// } from "@mui/material";
+// import { FiCloud } from "react-icons/fi";
+// import { useQuery } from "@tanstack/react-query";
+// import axios from "axios";
+
+// // Custom Components
+// import AtAGlanceCard from "./components/AtAGlanceCard";
+// import GraphWithFeatureSelection from "./components/GraphWithFeatureSelection";
+// import SensorDataCards from "./components/SensorDataCards";
+// import AboutProjectModel from "./components/AboutProjectModel";
+
+// // API URLs
+// const API_URL = "http://localhost:3500/api/node/";
+// const FILTERED_API_URL = "http://localhost:3500/api/node/filter";
+
+// // Fetch Sensor Data
+// const fetchSensorData = async (
+//   page,
+//   startDate,
+//   endDate,
+//   nodeValue,
+//   isSubmitClicked
+// ) => {
+//   try {
+//     const params = {
+//       page: parseInt(page, 10),
+//       limit: 10,
+//       nodeValue,
+//     };
+//     const url = isSubmitClicked ? FILTERED_API_URL : API_URL;
+
+//     const response = isSubmitClicked
+//       ? await axios.post(url, { startDate, endDate, nodeValue })
+//       : await axios.get(url, { params });
+
+//     const { data, currentPage, totalPages } = response.data;
+//     return { data, currentPage, totalPages };
+//   } catch (err) {
+//     throw new Error("Data fetch failed");
+//   }
+// };
+
+// const App = () => {
+//   // ─── State Management ─────────────────────────────────────────────
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+//   const [nodeValue, setNodeValue] = useState(1192);
+//   const [isDefaultView, setIsDefaultView] = useState(true);
+//   const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+//   const [isRecent, setIsRecent] = useState(true);
+//   const [errorMessage, setErrorMessage] = useState("");
+
+//   // ─── Fetching Data with React Query ────────────────────────────────
+//   const {
+//     data: sensorData,
+//     error,
+//     isLoading,
+//     isError,
+//     isSuccess,
+//   } = useQuery({
+//     queryKey: ["sensorData", currentPage, startDate, endDate, nodeValue],
+//     queryFn: () =>
+//       fetchSensorData(
+//         currentPage,
+//         startDate,
+//         endDate,
+//         nodeValue,
+//         isSubmitClicked
+//       ),
+//     keepPreviousData: true,
+//     refetchInterval: 1500,
+//   });
+
+//   // ─── Event Handlers ────────────────────────────────────────────────
+//   const handlePageChange = (_, newPage) => setCurrentPage(newPage);
+
+//   const handleDateFields = () => setIsRecent(false);
+
+//   const handleSubmit = () => {
+//     if (new Date(startDate) >= new Date(endDate)) {
+//       setErrorMessage("Start date must be less than end date.");
+//       return;
+//     }
+//     setErrorMessage("");
+//     setIsDefaultView(false);
+//     setIsSubmitClicked(true);
+//   };
+
+//   const handleReset = () => {
+//     setIsDefaultView(true);
+//     setIsSubmitClicked(false);
+//     setStartDate("");
+//     setEndDate("");
+//     setNodeValue(1192);
+//     setErrorMessage("");
+//     setCurrentPage(1);
+//     setIsRecent(true);
+//   };
+
+//   // ─── Derived Data ──────────────────────────────────────────────────
+//   const getFilteredSensorData = () => {
+//     if (isDefaultView && isSuccess) return sensorData?.data || [];
+
+//     const start = new Date(startDate).getTime();
+//     const end = new Date(endDate).getTime();
+
+//     return (
+//       sensorData?.data?.filter(({ nodeValue: nv, createdAt }) => {
+//         const itemDate = new Date(createdAt).getTime();
+//         return (
+//           parseInt(nv) === parseInt(nodeValue) &&
+//           itemDate >= start &&
+//           itemDate <= end
+//         );
+//       }) || []
+//     );
+//   };
+
+//   const getGraphData = () =>
+//     getFilteredSensorData().map(
+//       ({
+//         activityData: { timestamp, data, calculated, predicted },
+//         createdAt,
+//       }) => ({
+//         timestamp,
+//         createdAt,
+//         pm2_5: data?.pm2_5 || 0,
+//         pm10: data?.pm10 || 0,
+//         pm1: data?.pm1 || 0,
+//         temperature: data?.temperature || 0,
+//         humidity: data?.humidity || 0,
+//         co: data?.co || 0,
+//         voc: data?.voc || 0,
+//         co2: data?.co2 || 0,
+//         aqi_calc: Math.max(
+//           calculated?.aqi_co || 0,
+//           calculated?.aqi_dust || 0,
+//           calculated?.aqi_co2 || 0,
+//           calculated?.aqi_voc || 0
+//         ),
+//         aqi_pred: Math.max(predicted?.aqi_co || 0, predicted?.aqi_dust || 0),
+//       })
+//     );
+
+//   const getStatusMessages = () => {
+//     const defaultStatus = {
+//       coStatus: "Loading...",
+//       dustStatus: "Loading...",
+//       temperature: "N/A",
+//       humidity: "N/A",
+//       pressure: "N/A",
+//       co2: "N/A",
+//       co: "N/A",
+//       voc: "N/A",
+//       dust: "N/A",
+//       pm10: "N/A",
+//       pm25: "N/A",
+//       pm1: "N/A",
+//     };
+
+//     const mostRecentItem = sensorData?.data?.[0];
+//     if (!mostRecentItem?.activityData) return defaultStatus;
+
+//     const { status = {}, data = {} } = mostRecentItem.activityData;
+
+//     return {
+//       coStatus: status.co,
+//       dustStatus: status.dust,
+//       temperature: data.temperature ?? "N/A",
+//       humidity: data.humidity ?? "N/A",
+//       pressure: data.pressure ?? "N/A",
+//       co2: data.co2 ?? "N/A",
+//       co: data.co ?? "N/A",
+//       voc: data.voc ?? "N/A",
+//       dust: data.dust ?? "N/A",
+//       pm10: data.pm10 ?? "N/A",
+//       pm25: data.pm2_5 ?? "N/A",
+//       pm1: data.pm1 ?? "N/A",
+//     };
+//   };
+
+//   const {
+//     coStatus,
+//     dustStatus,
+//     temperature,
+//     humidity,
+//     pressure,
+//     co2,
+//     co,
+//     voc,
+//     dust,
+//     pm10,
+//     pm25,
+//     pm1,
+//   } = getStatusMessages();
+
+//   const getIndoorAQI = () => {
+//     const calc = sensorData?.data?.[0]?.activityData?.calculated;
+//     return calc
+//       ? Math.max(calc.aqi_dust, calc.aqi_co, calc.aqi_voc, calc.aqi_co2)
+//       : "Loading...";
+//   };
+
+//   const getOutdoorAQI = () => {
+//     const calc = sensorData?.data?.[0]?.activityData?.calculated;
+//     return calc ? Math.max(calc.aqi_dust, calc.aqi_co) : "Loading...";
+//   };
+
+//   const lastUpdatedMessage = isLoading
+//     ? "Loading..."
+//     : `Updated ${Math.floor(
+//         (Date.now() - new Date(sensorData?.data?.[0]?.updatedAt).getTime()) /
+//           1000
+//       )} seconds ago`;
+
+//   // ─── Render ────────────────────────────────────────────────────────
+//   return (
+//     <div style={{ backgroundColor: "#F5F5F5", width: "100%" }}>
+//       {/* Header */}
+//       <AppBar position="static" style={{ backgroundColor: "#1565C0" }}>
+//         <Toolbar>
+//           <FiCloud size={30} style={{ marginRight: "10px", color: "#fff" }} />
+//           <Typography variant="h6" sx={{ flexGrow: 1 }}>
+//             iPolluSense - Air Quality Monitoring
+//           </Typography>
+//           <Typography variant="body2">{lastUpdatedMessage}</Typography>
+//         </Toolbar>
+//       </AppBar>
+
+//       {/* At a Glance */}
+//       <AtAGlanceCard
+//         temperature={temperature}
+//         humidity={humidity}
+//         pressure={pressure}
+//         co2={co2}
+//         co={co}
+//         voc={voc}
+//         dust={dust}
+//         pm10={pm10}
+//         pm25={pm25}
+//         pm1={pm1}
+//         dustStatus={dustStatus}
+//         coStatus={coStatus}
+//         indoorAQI={getIndoorAQI()}
+//         outdoorAQI={getOutdoorAQI()}
+//         lastUpdatedMessage={lastUpdatedMessage}
+//       />
+
+//       {/* Filters */}
+//       <Box sx={{ padding: "20px" }}>
+//         <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+//           <TextField
+//             label="Node Value"
+//             value={nodeValue}
+//             onChange={(e) => {
+//               setNodeValue(e.target.value);
+//               setIsRecent(true);
+//             }}
+//             style={{ width: "50%", marginRight: "10px" }}
+//           />
+//           <Button
+//             variant={isRecent ? "contained" : "outlined"}
+//             color="secondary"
+//             onClick={handleReset}
+//             style={{ marginRight: "10px" }}
+//           >
+//             Recent Data
+//           </Button>
+//           <Button
+//             variant={isRecent ? "outlined" : "contained"}
+//             color="secondary"
+//             onClick={handleDateFields}
+//           >
+//             Historical Data
+//           </Button>
+//         </Box>
+
+//         {/* Date Inputs */}
+//         {!isRecent && (
+//           <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+//             <TextField
+//               label="Start Date"
+//               type="datetime-local"
+//               value={startDate}
+//               onChange={(e) => setStartDate(e.target.value)}
+//               InputLabelProps={{ shrink: true }}
+//               style={{ marginRight: "10px" }}
+//             />
+//             <TextField
+//               label="End Date"
+//               type="datetime-local"
+//               value={endDate}
+//               onChange={(e) => setEndDate(e.target.value)}
+//               InputLabelProps={{ shrink: true }}
+//             />
+//             <Button
+//               variant="contained"
+//               color="primary"
+//               onClick={handleSubmit}
+//               style={{ marginLeft: "10px" }}
+//             >
+//               Submit
+//             </Button>
+//           </Box>
+//         )}
+
+//         {/* Error Messages */}
+//         {errorMessage && (
+//           <Typography variant="body2" color="error" align="center">
+//             {errorMessage}
+//           </Typography>
+//         )}
+//         {isError && (
+//           <Typography variant="body2" color="error" align="center">
+//             {error.message}
+//           </Typography>
+//         )}
+//       </Box>
+
+//       {/* Graph + Sensor Cards */}
+//       <Box sx={{ padding: "20px" }}>
+//         <Grid container spacing={3} alignItems={"flex-end"}>
+//           <Grid item xs={12} md={8}>
+//             <GraphWithFeatureSelection data={getGraphData()} />
+//           </Grid>
+//           <Grid item xs={12} md={4}>
+//             <SensorDataCards
+//               data={getFilteredSensorData()}
+//               currentPage={currentPage}
+//               totalPages={sensorData?.totalPages || 1}
+//               onPageChange={handlePageChange}
+//               isDefaultView={isDefaultView}
+//             />
+//           </Grid>
+//         </Grid>
+//       </Box>
+
+//       {/* Project Info */}
+//       <AboutProjectModel />
+//     </div>
+//   );
+// };
+
+// export default App;
+
 import React, { useState } from "react";
 import {
   AppBar,
@@ -1723,6 +2078,8 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [formStartDate, setFormStartDate] = useState("");
+  const [formEndDate, setFormEndDate] = useState("");
   const [nodeValue, setNodeValue] = useState(1192);
   const [isDefaultView, setIsDefaultView] = useState(true);
   const [isSubmitClicked, setIsSubmitClicked] = useState(false);
@@ -1737,7 +2094,14 @@ const App = () => {
     isError,
     isSuccess,
   } = useQuery({
-    queryKey: ["sensorData", currentPage, startDate, endDate, nodeValue],
+    queryKey: [
+      "sensorData",
+      currentPage,
+      startDate,
+      endDate,
+      nodeValue,
+      isSubmitClicked,
+    ],
     queryFn: () =>
       fetchSensorData(
         currentPage,
@@ -1753,14 +2117,18 @@ const App = () => {
   // ─── Event Handlers ────────────────────────────────────────────────
   const handlePageChange = (_, newPage) => setCurrentPage(newPage);
 
-  const handleDateFields = () => setIsRecent(false);
+  const handleDateFields = () => {
+    setIsRecent(false);
+  };
 
   const handleSubmit = () => {
-    if (new Date(startDate) >= new Date(endDate)) {
+    if (new Date(formStartDate) >= new Date(formEndDate)) {
       setErrorMessage("Start date must be less than end date.");
       return;
     }
     setErrorMessage("");
+    setStartDate(formStartDate);
+    setEndDate(formEndDate);
     setIsDefaultView(false);
     setIsSubmitClicked(true);
   };
@@ -1770,6 +2138,8 @@ const App = () => {
     setIsSubmitClicked(false);
     setStartDate("");
     setEndDate("");
+    setFormStartDate("");
+    setFormEndDate("");
     setNodeValue(1192);
     setErrorMessage("");
     setCurrentPage(1);
@@ -1960,16 +2330,16 @@ const App = () => {
             <TextField
               label="Start Date"
               type="datetime-local"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              value={formStartDate}
+              onChange={(e) => setFormStartDate(e.target.value)}
               InputLabelProps={{ shrink: true }}
               style={{ marginRight: "10px" }}
             />
             <TextField
               label="End Date"
               type="datetime-local"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
+              value={formEndDate}
+              onChange={(e) => setFormEndDate(e.target.value)}
               InputLabelProps={{ shrink: true }}
             />
             <Button
