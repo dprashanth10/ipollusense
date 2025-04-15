@@ -2262,6 +2262,110 @@
 
 // export default GraphWithFeatureSelection;
 
+// Mock Firebase Data (for local testing)
+// querySnapshot = [
+//   {
+//     id: "qWoyUCUsooz5J43PJvNW",
+//     name: "Prajnadipta123",
+//     timestamp: "2025-04-11T18:00:55.885Z", // Replaced with createdAt
+//     activities: ["1", "2025-04-11T18:00:55.885Z", "Dhool", "Party"],
+//     conditions: ["Window", "Chimney", "Cave"],
+//     device_ids: ["1", "2", "3", "4"],
+//     factors: [{ value: "100", key: "aqi" }],
+//   },
+//   {
+//     id: "MNJIR1vzRTe41dnMNiKP",
+//     name: "Sujoy saha",
+//     timestamp: "2025-04-11T17:59:59.902Z", // Replaced with createdAt
+//     activities: ["2", "2025-04-11T17:59:59.902Z", "Dance"],
+//     conditions: ["Rain", "Humidity"],
+//     device_ids: ["5", "6"],
+//     factors: [{ value: "75", key: "humidity" }],
+//   },
+//   {
+//     id: "juLCIXoynSIsim4xauk0",
+//     name: "Arko",
+//     timestamp: "2025-04-11T17:59:28.653Z", // Replaced with createdAt
+//     activities: ["3", "2025-04-11T17:59:28.653Z", "Dhool", "Party"],
+//     conditions: ["Dust", "Noise"],
+//     device_ids: ["7", "8", "9"],
+//     factors: [{ value: "60", key: "noise" }],
+//   },
+//   {
+//     id: "yvwpepeolLov7gStXvGj",
+//     name: "Sujoy saha",
+//     timestamp: "2025-04-11T17:59:19.362Z", // Replaced with createdAt
+//     activities: ["4", "2025-04-11T17:59:19.362Z", "Meeting"],
+//     conditions: ["Pressure", "Temperature"],
+//     device_ids: ["10", "11"],
+//     factors: [{ value: "101", key: "pressure" }],
+//   },
+//   {
+//     id: "pOlF28UU789zuL13x2Xv",
+//     name: "Arko",
+//     timestamp: "2025-04-11T17:58:32.491Z", // Replaced with createdAt
+//     activities: ["5", "2025-04-11T17:58:32.491Z", "Dhool"],
+//     conditions: ["Humidity", "Temperature"],
+//     device_ids: ["12", "13"],
+//     factors: [{ value: "23", key: "temperature" }],
+//   },
+//   {
+//     id: "8qRJO0U24njpKuxCP5Ml",
+//     name: "vr",
+//     timestamp: "2025-04-11T17:57:47.747Z", // Replaced with createdAt
+//     activities: [
+//       "6",
+//       "2025-04-11T17:57:47.747Z",
+//       "Dance",
+//       "Discussion",
+//     ],
+//     conditions: ["Noise", "Vibration"],
+//     device_ids: ["14", "15"],
+//     factors: [{ value: "50", key: "vibration" }],
+//   },
+//   {
+//     id: "US47g2cfwgy2jIQHw9QL",
+//     name: "VEERENDRA R PATIL",
+//     timestamp: "2025-04-11T17:57:19.524Z", // Replaced with createdAt
+//     activities: ["7", "2025-04-11T17:57:19.524Z", "Research", "Party"],
+//     conditions: ["Temperature", "Pressure"],
+//     device_ids: ["16", "17"],
+//     factors: [{ value: "20", key: "temperature" }],
+//   },
+//   {
+//     id: "hdo85oRmo0thTlmTrMxK",
+//     name: "John",
+//     timestamp: "2025-04-11T17:57:09.759Z", // Replaced with createdAt
+//     activities: [
+//       "8",
+//       "2025-04-11T17:57:09.759Z",
+//       "Discussion",
+//       "Training",
+//     ],
+//     conditions: ["Pressure", "Humidity"],
+//     device_ids: ["18", "19"],
+//     factors: [{ value: "102", key: "pressure" }],
+//   },
+//   {
+//     id: "g3rc4A5yh8DjFs9DkYnB",
+//     name: "Veerendra",
+//     timestamp: "2025-04-11T17:56:58.637Z", // Replaced with createdAt
+//     activities: ["9", "2025-04-11T17:56:58.637Z", "Lecture"],
+//     conditions: ["Wind", "Dust"],
+//     device_ids: ["20", "21"],
+//     factors: [{ value: "15", key: "wind" }],
+//   },
+//   {
+//     id: "IpL4xDzqOOiKQnQCLfbG",
+//     name: "Ankur",
+//     timestamp: "2025-04-11T17:56:48.216Z", // Replaced with createdAt
+//     activities: ["10", "2025-04-11T17:56:48.216Z", "Party"],
+//     conditions: ["Heat"],
+//     device_ids: ["22", "23"],
+//     factors: [{ value: "30", key: "temperature" }],
+//   },
+// ];
+
 import React, {
   useState,
   useMemo,
@@ -2304,7 +2408,7 @@ import {
 } from "firebase/firestore";
 
 // Component
-const GraphWithFeatureSelection = ({ data }) => {
+const GraphWithFeatureSelection = ({ data, startDate, endDate }) => {
   /** ──────── 📦 Constants ──────── */
   const NODE_ID = 1192;
 
@@ -2368,110 +2472,6 @@ const GraphWithFeatureSelection = ({ data }) => {
           id: doc.id,
           ...doc.data(),
         }));
-
-        // Mock Firebase Data (for local testing)
-        querySnapshot = [
-          {
-            id: "qWoyUCUsooz5J43PJvNW",
-            name: "Prajnadipta123",
-            timestamp: "2025-04-11T18:00:55.885Z", // Replaced with createdAt
-            activities: ["1", "2025-04-11T18:00:55.885Z", "Dhool", "Party"],
-            conditions: ["Window", "Chimney", "Cave"],
-            device_ids: ["1", "2", "3", "4"],
-            factors: [{ value: "100", key: "aqi" }],
-          },
-          {
-            id: "MNJIR1vzRTe41dnMNiKP",
-            name: "Sujoy saha",
-            timestamp: "2025-04-11T17:59:59.902Z", // Replaced with createdAt
-            activities: ["2", "2025-04-11T17:59:59.902Z", "Dance"],
-            conditions: ["Rain", "Humidity"],
-            device_ids: ["5", "6"],
-            factors: [{ value: "75", key: "humidity" }],
-          },
-          {
-            id: "juLCIXoynSIsim4xauk0",
-            name: "Arko",
-            timestamp: "2025-04-11T17:59:28.653Z", // Replaced with createdAt
-            activities: ["3", "2025-04-11T17:59:28.653Z", "Dhool", "Party"],
-            conditions: ["Dust", "Noise"],
-            device_ids: ["7", "8", "9"],
-            factors: [{ value: "60", key: "noise" }],
-          },
-          {
-            id: "yvwpepeolLov7gStXvGj",
-            name: "Sujoy saha",
-            timestamp: "2025-04-11T17:59:19.362Z", // Replaced with createdAt
-            activities: ["4", "2025-04-11T17:59:19.362Z", "Meeting"],
-            conditions: ["Pressure", "Temperature"],
-            device_ids: ["10", "11"],
-            factors: [{ value: "101", key: "pressure" }],
-          },
-          {
-            id: "pOlF28UU789zuL13x2Xv",
-            name: "Arko",
-            timestamp: "2025-04-11T17:58:32.491Z", // Replaced with createdAt
-            activities: ["5", "2025-04-11T17:58:32.491Z", "Dhool"],
-            conditions: ["Humidity", "Temperature"],
-            device_ids: ["12", "13"],
-            factors: [{ value: "23", key: "temperature" }],
-          },
-          {
-            id: "8qRJO0U24njpKuxCP5Ml",
-            name: "vr",
-            timestamp: "2025-04-11T17:57:47.747Z", // Replaced with createdAt
-            activities: [
-              "6",
-              "2025-04-11T17:57:47.747Z",
-              "Dance",
-              "Discussion",
-            ],
-            conditions: ["Noise", "Vibration"],
-            device_ids: ["14", "15"],
-            factors: [{ value: "50", key: "vibration" }],
-          },
-          {
-            id: "US47g2cfwgy2jIQHw9QL",
-            name: "VEERENDRA R PATIL",
-            timestamp: "2025-04-11T17:57:19.524Z", // Replaced with createdAt
-            activities: ["7", "2025-04-11T17:57:19.524Z", "Research", "Party"],
-            conditions: ["Temperature", "Pressure"],
-            device_ids: ["16", "17"],
-            factors: [{ value: "20", key: "temperature" }],
-          },
-          {
-            id: "hdo85oRmo0thTlmTrMxK",
-            name: "John",
-            timestamp: "2025-04-11T17:57:09.759Z", // Replaced with createdAt
-            activities: [
-              "8",
-              "2025-04-11T17:57:09.759Z",
-              "Discussion",
-              "Training",
-            ],
-            conditions: ["Pressure", "Humidity"],
-            device_ids: ["18", "19"],
-            factors: [{ value: "102", key: "pressure" }],
-          },
-          {
-            id: "g3rc4A5yh8DjFs9DkYnB",
-            name: "Veerendra",
-            timestamp: "2025-04-11T17:56:58.637Z", // Replaced with createdAt
-            activities: ["9", "2025-04-11T17:56:58.637Z", "Lecture"],
-            conditions: ["Wind", "Dust"],
-            device_ids: ["20", "21"],
-            factors: [{ value: "15", key: "wind" }],
-          },
-          {
-            id: "IpL4xDzqOOiKQnQCLfbG",
-            name: "Ankur",
-            timestamp: "2025-04-11T17:56:48.216Z", // Replaced with createdAt
-            activities: ["10", "2025-04-11T17:56:48.216Z", "Party"],
-            conditions: ["Heat"],
-            device_ids: ["22", "23"],
-            factors: [{ value: "30", key: "temperature" }],
-          },
-        ];
 
         console.log("querySnapshots Query:", querySnapshot);
 
@@ -2546,10 +2546,14 @@ const GraphWithFeatureSelection = ({ data }) => {
           body: JSON.stringify({
             timeRange: selectedRange,
             nodeValue: NODE_ID,
+            startDate: startDate,
+            endDate: endDate,
           }),
         }
       );
       const result = await response.json();
+      console.log("Result:", result);
+
       const formatted = result.data.map(({ activityData, createdAt }) => ({
         timestamp: activityData.timestamp,
         createdAt,
@@ -2572,7 +2576,6 @@ const GraphWithFeatureSelection = ({ data }) => {
           activityData.predicted?.aqi_dust
         ),
       }));
-      console.log("Formatted Data:", formatted);
 
       setOriginalData(formatted);
     } catch (err) {

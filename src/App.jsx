@@ -2370,7 +2370,11 @@ const App = () => {
       <Box sx={{ padding: "20px" }}>
         <Grid container spacing={3} alignItems={"flex-end"}>
           <Grid item xs={12} md={8}>
-            <GraphWithFeatureSelection data={getGraphData()} />
+            <GraphWithFeatureSelection
+              data={getGraphData()}
+              startDate={startDate}
+              endDate={endDate}
+            />
           </Grid>
           <Grid item xs={12} md={4}>
             <SensorDataCards
