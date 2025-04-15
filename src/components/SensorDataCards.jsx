@@ -898,7 +898,7 @@ const SensorDataCards = ({
                       fontWeight: 600,
                     }}
                   >
-                    #{item.index}
+                    {item.index}
                   </Typography>
                   <Typography
                     variant="caption"
