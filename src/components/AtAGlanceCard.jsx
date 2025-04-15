@@ -486,10 +486,10 @@ const AtAGlanceCard = ({
           {[
             { label: "Good", color: "#00E400" },
             { label: "Moderate", color: "#FFFF00" },
-            { label: "Unhealthy", color: "#FF7E00" },
-            { label: "severe", color: "#FF0000" },
-            { label: "Very Unhealthy", color: "#8F3F97" },
-            { label: "Hazardous", color: "#7E0023" },
+            { label: "Satisfactory", color: "#FF7E00" },
+            { label: "Poor", color: "#FF0000" },
+            { label: "Very Poor", color: "#8F3F97" },
+            { label: "Severe", color: "#7E0023" },
           ].map((legend, index) => (
             <Box
               key={index}
