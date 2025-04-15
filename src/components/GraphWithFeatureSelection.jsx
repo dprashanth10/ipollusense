@@ -2585,16 +2585,42 @@ const GraphWithFeatureSelection = ({ data, startDate, endDate }) => {
     }
   };
 
+  // const generateCustomTicks = (data, selectedRange) => {
+  //   let interval;
+  //   if (selectedRange === "1h") interval = 10;
+  //   else if (selectedRange === "5h") interval = 30;
+  //   else if (selectedRange === "1d") interval = 60;
+
+  //   return data
+  //     .filter((entry) => {
+  //       const minutes = dayjs(entry.timestamp).minute();
+  //       return interval >= 60 ? minutes === 0 : minutes % interval === 0;
+  //     })
+  //     .map((entry) => entry.timestamp);
+  // };
   const generateCustomTicks = (data, selectedRange) => {
     let interval;
     if (selectedRange === "1h") interval = 10;
     else if (selectedRange === "5h") interval = 30;
     else if (selectedRange === "1d") interval = 60;
 
+    const seenMinutes = new Set();
+
     return data
       .filter((entry) => {
-        const minutes = dayjs(entry.timestamp).minute();
-        return interval >= 60 ? minutes === 0 : minutes % interval === 0;
+        const ts = dayjs(entry.timestamp);
+        const minutes = ts.minute();
+        const hourMinuteKey = ts.format("HH:mm");
+
+        // Only include if it matches the interval and hasn't been added before
+        if (
+          (interval >= 60 ? minutes === 0 : minutes % interval === 0) &&
+          !seenMinutes.has(hourMinuteKey)
+        ) {
+          seenMinutes.add(hourMinuteKey);
+          return true;
+        }
+        return false;
       })
       .map((entry) => entry.timestamp);
   };
